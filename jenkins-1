@@ -1,15 +1,13 @@
 pipeline {
-  agent any
-
-  stages {
-    stage('Hello') {
-      steps {
-        sh '''
-          ansible --version
-          ansible-playbook --version
-          ansible-galaxy --version
-        '''
-      }
+    agent any
+    stages {
+        stage('Run Command') {
+            steps {
+                script {
+                    // Use Windows-specific command for background execution
+                    bat 'start myscript.bat'
+                }
+            }
+        }
     }
-  }
 }
