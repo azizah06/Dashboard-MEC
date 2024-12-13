@@ -4,7 +4,7 @@ pipeline {
   stages {
     stage('Hello') {
       steps {
-        pip '''
+        powershell '''
           ansible --version
           ansible-playbook --version
           ansible-galaxy --version
