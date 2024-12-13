@@ -6,7 +6,6 @@ pipeline {
       steps {
         sh '''
           ansible --version
-          ansible-playbook --version
         '''
       }
     }
