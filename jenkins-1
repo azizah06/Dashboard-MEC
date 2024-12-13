@@ -1,10 +1,7 @@
-pipeline {
-    agent any
-    stages {
-        stage('Check PATH') {
-            steps {
-                sh 'echo $PATH'
-            }
-        }
+stage('Send Dockerfile to Ansible') {
+    steps {
+        sh '''
+        "C:/Program Files/Git/usr/bin/scp.exe" -i /path/to/private/key Dockerfile ansible@192.168.1.10:/home/ansible/
+        '''
     }
 }
