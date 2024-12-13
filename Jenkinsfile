@@ -7,14 +7,14 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 // Menginstal Ansible jika belum terpasang
-                sh 'pip install ansible'
+                bat 'pip install ansible'
             }
         }
         stage('Run Ansible Playbook') {
             steps {
                 script {
                     // Menjalankan playbook Ansible yang ada di repository
-                    sh 'ansible-playbook -i inventory/hosts playbook.yml'
+                    bat 'ansible-playbook -i inventory/hosts playbook.yml'
                 }
             }
         }
