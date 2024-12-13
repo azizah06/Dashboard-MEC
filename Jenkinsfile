@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     // Jalankan playbook di dalam Jenkins workspace
-                    sh 'ansible-playbook test-playbook.yml'
+                    bat 'ansible-playbook test-playbook.yml'
                 }
             }
         }
