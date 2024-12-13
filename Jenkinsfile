@@ -1,21 +1,17 @@
 pipeline {
     agent any
     stages {
-        // Tahap: Git Checkout
-        stage('Git Checkout') {
+        stage('Send Dockerfile to Ansible') {
             steps {
-                echo 'Cloning repository from Git...'
-                checkout scm // Mengambil kode dari repository SCM
-            }
-        }
-        
-        // Tahap: Mengirim Dockerfile ke Ansible Server
-        stage('Sending Dockerfile to Ansible Server') {
-            steps {
-                echo 'Sending Dockerfile to Ansible server...'
-                sh '''
-                    scp Dockerfile user@ansible-server:/path/to/target
-                '''
+                script {
+                    // Ganti path private key dengan path yang sesuai
+                    def scpPath = 'C:/Program Files/Git/usr/bin/scp.exe'
+                    def privateKeyPath = 'C:/Users/jujoe/.ssh/id_rsa'  // Ganti dengan path yang sesuai
+                    
+                    // Jalankan SCP menggunakan path absolut
+                    echo "Sending Dockerfile to Ansible server..."
+                    sh "\"${scpPath}\" -i \"${privateKeyPath}\" Dockerfile ansible@192.168.1.10:/home/ansible/"
+                }
             }
         }
     }
