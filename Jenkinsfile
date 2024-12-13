@@ -1,15 +1,14 @@
 pipeline {
-  agent any
+    agent any
 
-  stages {
-    stage('Hello') {
-      steps {
-        bat '''
-          ansible --version
-          ansible-playbook --version
-          ansible-galaxy --version
-        '''
-      }
+    stages {
+        stage('Run Ansible Playbook') {
+            steps {
+                script {
+                    // Jalankan playbook di dalam Jenkins workspace
+                    sh 'ansible-playbook test-playbook.yml'
+                }
+            }
+        }
     }
-  }
 }
