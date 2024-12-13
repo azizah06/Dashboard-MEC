@@ -3,20 +3,19 @@ pipeline {
     stages {
         stage('Send Dockerfile to Ansible') {
             steps {
-                sh '''
-                "C:/Program Files/Git/usr/bin/scp.exe" -i /path/to/private/key Dockerfile ansible@192.168.1.10:/home/ansible/
-                '''
-            }
-        }
-
-        stage('Debug SCP') {
-            steps {
                 script {
-                    // Debugging the environment and commands
+                    def scpPath = 'C:/Program Files/Git/usr/bin/scp.exe'
+                    def privateKeyPath = 'C:/path/to/private/key'  // Ganti dengan path yang sesuai
+                    
+                    // Debugging: pastikan SCP ada dan Dockerfile ada di workspace
                     echo "Checking if SCP is available"
-                    sh 'which scp'  // or 'where scp' on Windows
-                    sh 'scp -V'    // Check SCP version
-                    sh 'ls -l'     // Ensure Dockerfile exists in the workspace
+                    sh 'where scp'  // Mencari lokasi SCP
+                    sh 'scp -V'     // Memeriksa versi SCP
+                    sh 'ls -l'      // Memastikan Dockerfile ada di workspace
+                    
+                    // Jalankan SCP menggunakan path absolut
+                    echo "Sending Dockerfile to Ansible server..."
+                    sh "\"${scpPath}\" -i \"${privateKeyPath}\" Dockerfile ansible@192.168.1.10:/home/ansible/"
                 }
             }
         }
