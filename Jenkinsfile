@@ -10,9 +10,14 @@ pipeline {
         stage('Sending Dockerfile to Ansible Server') {
             steps {
                 echo 'Sending Dockerfile to Ansible server...'
-                // Tambahkan perintah yang sesuai untuk mengirim Dockerfile
+                // Menggunakan sshagent untuk autentikasi SSH dengan private key yang disimpan di Jenkins Credentials
+                sshagent(credentials: ['ansible-ssh-key']) {
+                    // Perintah SCP untuk mengirim Dockerfile ke server Ansible
+                    sh 'scp Dockerfile ansible@192.168.1.10:/home/ansible/'
+                }
             }
         }
+
         stage('Docker Build Image') {
             steps {
                 echo 'Building Docker image...'
