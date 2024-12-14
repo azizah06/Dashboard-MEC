@@ -3,24 +3,24 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                // Clone repository dengan memilih branch dan kredensial yang benar
-                git branch: 'patch-1', 
-                    credentialsId: 'azizah', 
-                    url: 'https://github.com/JunandaDeyastusesa/Dashboard-MEC-1.git'
+                git branch: 'patch-1', credentialsId: 'azizah', url: 'https://github.com/JunandaDeyastusesa/Dashboard-MEC-1.git'
+            }
+        }
+        stage('Install Ansible') {
+            steps {
+                // Install Ansible jika belum ada
+                sh 'pip install ansible'
             }
         }
         stage('Install Dependencies') {
             steps {
-                // Install dependencies menggunakan Ansible Galaxy
+                // Menginstal dependencies dari requirements.yml
                 sh 'ansible-galaxy install -r requirements.yml'
             }
         }
         stage('Run Ansible Playbook') {
             steps {
-                // Jalankan Ansible playbook
-                ansiblePlaybook credentialsId: 'azizah', 
-                    inventory: 'hosts', 
-                    playbook: 'playbooks/mariadb.yml'
+                ansiblePlaybook credentialsId: 'azizah', inventory: 'hosts', playbook: 'playbooks/mariadb.yml'
             }
         }
     }
