@@ -1,0 +1,32 @@
+- name: Install and configure MariaDB
+ hosts: all
+ become: yes
+ tasks:
+ - name: Install MariaDB package
+ apt:
+ name: mariadb-server
+ state: present
+ - name: Start and enable MariaDB service
+ systemd:
+ name: mariadb
+ state: started
+ enabled: yes
+ - name: Secure MariaDB installation
+ mysql_secure_installation:
+ login_user: root
+ login_password: ''
+ new_password: 'your_root_password'
+ remove_anonymous_users: yes
+ disallow_root_login_remotely: yes
+ remove_test_database: yes
+ state: present
+ - name: Create a database
+ mysql_db:
+ name: mydatabase
+ state: present
+ - name: Create a database user
+ mysql_user:
+ name: myuser
+ password: 'mypassword'
+ priv: 'mydatabase.*:ALL'
+ state: present
