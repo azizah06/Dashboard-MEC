@@ -3,7 +3,7 @@ pipeline {
  stages {
  stage('Clone Repository') {
  steps {
- git 'https://github.com/username/repository.git'
+ git 'https://github.com/JunandaDeyastusesa/Dashboard-MEC-1.git'
  }
  }
  stage('Install Dependencies') {
