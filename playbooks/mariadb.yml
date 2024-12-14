@@ -1,43 +1,38 @@
-- name: Install and configure MariaDB
+---
+- name: Install and configure MySQL
   hosts: all
+  become: yes
   tasks:
-    - name: Install MariaDB client
+    - name: Install MySQL package
       apt:
-        name: mariadb-client
+        name: mysql-server
         state: present
 
-    - name: Wait for MySQL container to be ready
-      wait_for:
-        host: 127.0.0.1
-        port: 3306
-        timeout: 30
+    - name: Start and enable MySQL service
+      systemd:
+        name: mysql
+        state: started
+        enabled: yes
 
-    - name: Secure MariaDB installation
-      mysql_user:
-        login_host: 127.0.0.1
-        login_user: root
-        login_password: root
-        name: root
-        password: your_root_password
-        priv: '*.*:ALL'
-        host: '%'
-        state: present
+    - name: Secure MySQL installation
+      shell: |
+        mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY 'your_root_password';"
+        mysql -e "DELETE FROM mysql.user WHERE User='';"
+        mysql -e "DROP DATABASE IF EXISTS test;"
+        mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';"
+        mysql -e "FLUSH PRIVILEGES;"
+      args:
+        executable: /bin/bash
 
-    - name: Create a new database
+    - name: Create a database
       mysql_db:
-        login_host: 127.0.0.1
-        login_user: root
-        login_password: your_root_password
         name: mydatabase
         state: present
 
-    - name: Create a database user with privileges
+    - name: Create a database user
       mysql_user:
-        login_host: 127.0.0.1
-        login_user: root
-        login_password: your_root_password
         name: myuser
-        password: mypassword
+        password: 'mypassword'
         priv: 'mydatabase.*:ALL'
-        host: '%'
+        host: "%"
         state: present
