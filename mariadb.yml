@@ -1,0 +1,16 @@
+---
+- name: Install and configure MariaDB
+  hosts: db_servers
+  become: true
+
+  tasks:
+    - name: Install MariaDB
+      ansible.builtin.yum:
+        name: mariadb-server
+        state: present
+
+    - name: Start and enable MariaDB service
+      ansible.builtin.service:
+        name: mariadb
+        state: started
+        enabled: true
