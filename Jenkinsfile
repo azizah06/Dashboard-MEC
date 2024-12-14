@@ -1,11 +1,6 @@
 pipeline {
  agent any
  stages {
- stage('Clone Repository') {
- steps {
- git 'https://github.com/JunandaDeyastusesa/Dashboard-MEC-1.git'
- }
- }
  stage('Install Dependencies') {
  steps {
  sh 'ansible-galaxy install -r requirements.yml'
