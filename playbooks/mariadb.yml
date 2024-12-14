@@ -1,0 +1,52 @@
+---
+- name: Install and configure MariaDB
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install MariaDB package
+      apt:
+        name: mariadb-server
+        state: present
+
+    - name: Start and enable MariaDB service
+      systemd:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name: Secure MariaDB installation - Remove anonymous users
+      mysql_user:
+        name: ''
+        state: absent
+        login_user: root
+        login_password: ''
+        new_password: 'your_root_password'
+
+    - name: Secure MariaDB installation - Disallow root login remotely
+      mysql_user:
+        name: root
+        host_all: true
+        state: present
+        login_user: root
+        login_password: 'your_root_password'
+        new_password: 'your_root_password'
+
+    - name: Remove test database
+      command: mysql -u root -p'your_root_password' -e "DROP DATABASE IF EXISTS test;"
+
+    - name: Create a database
+      mysql_db:
+        name: mydatabase
+        state: present
+        login_user: root
+        login_password: 'your_root_password'
+
+    - name: Create a database user and grant privileges
+      mysql_user:
+        name: myuser
+        password: 'mypassword'
+        priv: 'mydatabase.*:ALL'
+        state: present
+        login_user: root
+        login_password: 'your_root_password'
