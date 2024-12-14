@@ -1,5 +1,5 @@
-- name: Configure MariaDB in Docker container
-  hosts: localhost
+- name: Install and configure MariaDB
+  hosts: all
   tasks:
     - name: Install MariaDB client
       apt:
