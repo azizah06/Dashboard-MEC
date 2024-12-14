@@ -13,7 +13,7 @@ pipeline {
  }
  stage('Run Ansible Playbook') {
  steps {
- ansiblePlaybook credentialsId: 'your-credentials-id', inventory: 'hosts', playbook:
+ ansiblePlaybook credentialsId: 'azizah', inventory: 'hosts', playbook:
 'playbooks/mariadb.yml'
  }
  }
