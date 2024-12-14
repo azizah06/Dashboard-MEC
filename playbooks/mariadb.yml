@@ -1,32 +1,43 @@
-- name: Install and configure MariaDB
- hosts: all
- become: yes
- tasks:
- - name: Install MariaDB package
- apt:
- name: mariadb-server
- state: present
- - name: Start and enable MariaDB service
- systemd:
- name: mariadb
- state: started
- enabled: yes
- - name: Secure MariaDB installation
- mysql_secure_installation:
- login_user: root
- login_password: ''
- new_password: 'your_root_password'
- remove_anonymous_users: yes
- disallow_root_login_remotely: yes
- remove_test_database: yes
- state: present
- - name: Create a database
- mysql_db:
- name: mydatabase
- state: present
- - name: Create a database user
- mysql_user:
- name: myuser
- password: 'mypassword'
- priv: 'mydatabase.*:ALL'
- state: present
+- name: Configure MariaDB in Docker container
+  hosts: localhost
+  tasks:
+    - name: Install MariaDB client
+      apt:
+        name: mariadb-client
+        state: present
+
+    - name: Wait for MySQL container to be ready
+      wait_for:
+        host: 127.0.0.1
+        port: 3306
+        timeout: 30
+
+    - name: Secure MariaDB installation
+      mysql_user:
+        login_host: 127.0.0.1
+        login_user: root
+        login_password: root
+        name: root
+        password: your_root_password
+        priv: '*.*:ALL'
+        host: '%'
+        state: present
+
+    - name: Create a new database
+      mysql_db:
+        login_host: 127.0.0.1
+        login_user: root
+        login_password: your_root_password
+        name: mydatabase
+        state: present
+
+    - name: Create a database user with privileges
+      mysql_user:
+        login_host: 127.0.0.1
+        login_user: root
+        login_password: your_root_password
+        name: myuser
+        password: mypassword
+        priv: 'mydatabase.*:ALL'
+        host: '%'
+        state: present
